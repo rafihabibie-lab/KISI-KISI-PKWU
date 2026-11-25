@@ -145,57 +145,6 @@ body{
 .block.correction h4{color:var(--red);}
 .block.correction p{color:#7a2e2e;font-size:.9rem;margin:0;}
 
-/* ===== FLASHCARD ===== */
-.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;margin-top:32px;}
-.fc-counter{
-  font-family:'Segoe UI',sans-serif;font-size:.85rem;color:var(--muted);
-  font-weight:600;letter-spacing:.5px;
-}
-.flashcard{
-  width:100%;max-width:560px;height:280px;perspective:1200px;cursor:pointer;
-}
-.flashcard-inner{
-  position:relative;width:100%;height:100%;
-  transition:transform .7s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;
-}
-.flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
-.fc-face{
-  position:absolute;width:100%;height:100%;backface-visibility:hidden;
-  background:var(--paper);border:1px solid var(--line);border-radius:16px;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  padding:36px 32px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.06);
-}
-.fc-face .fc-label{
-  font-family:'Segoe UI',sans-serif;font-size:.72rem;letter-spacing:2.5px;
-  text-transform:uppercase;font-weight:700;margin-bottom:16px;
-}
-.fc-front .fc-label{color:var(--gold);}
-.fc-back{
-  transform:rotateY(180deg);
-  background:linear-gradient(160deg,#fbf7ef,#f3ead7);
-  border-color:#e3d4b0;
-}
-.fc-back .fc-label{color:var(--green);}
-.fc-face .fc-text{
-  font-size:1.08rem;line-height:1.6;color:var(--ink);
-}
-.fc-front .fc-text{font-weight:600;}
-.fc-back .fc-text{font-size:1rem;}
-.fc-hint{
-  font-family:'Segoe UI',sans-serif;font-size:.78rem;color:var(--muted);
-  margin-top:16px;font-style:italic;
-}
-.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
-.btn{
-  font-family:'Segoe UI',sans-serif;font-size:.88rem;font-weight:600;
-  padding:10px 22px;border-radius:999px;border:1px solid var(--line);
-  background:var(--paper);color:var(--ink);cursor:pointer;transition:.2s;
-}
-.btn:hover{background:var(--gold-soft);border-color:#d4c39a;color:var(--gold-dark);}
-.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff;}
-.btn.primary:hover{background:var(--gold-dark);border-color:var(--gold-dark);}
-.btn.ghost{background:transparent;}
-
 /* ===== QUIZ ===== */
 .quiz-top{
   display:flex;justify-content:space-between;align-items:center;
@@ -281,9 +230,6 @@ footer strong{color:var(--gold-dark);}
   .materi-head{padding:16px 18px;gap:12px;}
   .materi-title{font-size:1.02rem;}
   .materi-body-inner{padding:0 18px 20px;}
-  .flashcard{height:260px;}
-  .fc-face{padding:24px 20px;}
-  .fc-face .fc-text{font-size:.98rem;}
   .quiz-card{padding:20px;}
   .q-text{font-size:1rem;}
 }
@@ -297,7 +243,6 @@ footer strong{color:var(--gold-dark);}
     <div class="brand">PKWU <span>· Bahan Ajar</span></div>
     <div class="nav">
       <a href="#materi">Materi</a>
-      <a href="#flashcard">Flashcard</a>
       <a href="#kuis">Kuis</a>
     </div>
   </div>
@@ -307,7 +252,7 @@ footer strong{color:var(--gold-dark);}
 <header class="hero">
   <div class="eyebrow">Sumatif Akhir Semester · PKWU</div>
   <h1>Wirausaha, Rekayasa Sistem Teknik &amp; Pengolahan Makanan</h1>
-  <p class="lead">Ringkasan materi, pendalaman indikator soal, flashcard hafalan, dan 40 kuis interaktif berpembahasan untuk Kelas XI SMA.</p>
+  <p class="lead">Ringkasan materi, pendalaman indikator soal, dan 40 kuis interaktif berpembahasan untuk Kelas XI SMA.</p>
   <div class="hero-meta">
     <span>Bab 1 · Kerajinan Limbah</span>
     <span>Bab 2 · Rekayasa Sistem Teknik</span>
@@ -328,39 +273,9 @@ footer strong{color:var(--gold-dark);}
   <div class="materi-list" id="materiList"></div>
 </section>
 
-<!-- ================== BAGIAN 02: FLASHCARD ================== -->
-<section class="section" id="flashcard">
-  <div class="part">Bagian 02</div>
-  <h2>Flashcard Hafalan</h2>
-  <p class="sub">Klik kartu untuk membalik. Gunakan tombol navigasi atau acak untuk menguji ingatan.</p>
-
-  <div class="fc-wrap">
-    <div class="fc-counter" id="fcCounter">Kartu 1 / 20</div>
-    <div class="flashcard" id="flashcard" onclick="flipCard()">
-      <div class="flashcard-inner">
-        <div class="fc-face fc-front">
-          <div class="fc-label">Pertanyaan</div>
-          <div class="fc-text" id="fcQuestion">Memuat...</div>
-          <div class="fc-hint">Klik kartu untuk melihat jawaban</div>
-        </div>
-        <div class="fc-face fc-back">
-          <div class="fc-label">Jawaban</div>
-          <div class="fc-text" id="fcAnswer">Memuat...</div>
-          <div class="fc-hint">Klik untuk kembali</div>
-        </div>
-      </div>
-    </div>
-    <div class="fc-controls">
-      <button class="btn ghost" onclick="prevCard()">← Sebelumnya</button>
-      <button class="btn" onclick="shuffleCards()">🔀 Acak</button>
-      <button class="btn primary" onclick="nextCard()">Berikutnya →</button>
-    </div>
-  </div>
-</section>
-
-<!-- ================== BAGIAN 03: KUIS ================== -->
+<!-- ================== BAGIAN 02: KUIS ================== -->
 <section class="section" id="kuis">
-  <div class="part">Bagian 03</div>
+  <div class="part">Bagian 02</div>
   <h2>Kuis Interaktif</h2>
   <p class="sub">40 soal pilihan ganda. Setiap jawaban langsung diberi pembahasan. Uji kesiapanmu!</p>
 
@@ -397,7 +312,7 @@ const materiData = [
     desc:"Menjelaskan tujuan wirausaha dan pemanfaatan bahan limbah",
     inti:[
       "Wirausaha kerajinan dari bahan limbah adalah kegiatan mengubah limbah menjadi produk kerajinan bernilai jual untuk memperoleh keuntungan sekaligus mengurangi pencemaran.",
-      "Tujuan utama:",
+      "Tujuan utama:"
     ],
     list:[
       "<strong>Menciptakan nilai tambah</strong> dari bahan yang sebelumnya tidak bernilai.",
@@ -416,9 +331,7 @@ const materiData = [
   {
     title:"Peluang & Ide Usaha Kerajinan",
     desc:"Menentukan faktor pemilihan produk dan prinsip pengembangan ide",
-    inti:[
-      "Sebelum memilih produk kerajinan, wirausaha perlu mempertimbangkan beberapa faktor agar usaha tidak sia-sia."
-    ],
+    inti:["Sebelum memilih produk kerajinan, wirausaha perlu mempertimbangkan beberapa faktor agar usaha tidak sia-sia."],
     list:[
       "<strong>Ketersediaan bahan</strong> — bahan mudah diperoleh dan berkelanjutan.",
       "<strong>Minat pasar</strong> — ada konsumen yang membutuhkan.",
@@ -436,9 +349,7 @@ const materiData = [
   {
     title:"Kelayakan & Analisis Pasar",
     desc:"Menjelaskan tujuan analisis kelayakan dan menentukan jenis analisis usaha",
-    inti:[
-      "Analisis kelayakan usaha adalah kajian sebelum produksi untuk memastikan usaha layak dijalankan."
-    ],
+    inti:["Analisis kelayakan usaha adalah kajian sebelum produksi untuk memastikan usaha layak dijalankan."],
     list:[
       "<strong>Tujuan:</strong> menghindari kerugian, memastikan pasar ada, dan mengukur kesiapan sumber daya.",
       "<strong>Aspek kelayakan:</strong> pasar, teknis, finansial, dan SDM.",
@@ -454,9 +365,7 @@ const materiData = [
   {
     title:"Modal, Biaya, Pendapatan & Keuntungan",
     desc:"Menghitung biaya produksi, pendapatan, dan keuntungan usaha",
-    inti:[
-      "Modal adalah sumber daya untuk membiayai produksi, operasional, dan pengembangan usaha. Jika modal terbatas, wirausaha dapat memulai usaha kecil, menggunakan bahan lokal, berkolaborasi, atau mengajukan pinjaman terukur."
-    ],
+    inti:["Modal adalah sumber daya untuk membiayai produksi, operasional, dan pengembangan usaha. Jika modal terbatas, wirausaha dapat memulai usaha kecil, menggunakan bahan lokal, berkolaborasi, atau mengajukan pinjaman terukur."],
     list:[
       "<strong>Biaya produksi per unit</strong> = Total biaya ÷ Jumlah produk.",
       "<strong>Total pendapatan</strong> = Jumlah produk × Harga jual.",
@@ -472,9 +381,7 @@ const materiData = [
   {
     title:"Strategi Pemasaran & Inovasi Produk",
     desc:"Menentukan strategi pemasaran dan menjelaskan tujuan inovasi",
-    inti:[
-      "Strategi pemasaran yang tepat menggunakan bauran pemasaran <strong>4P</strong>: Product (produk), Price (harga), Place (tempat), Promotion (promosi)."
-    ],
+    inti:["Strategi pemasaran yang tepat menggunakan bauran pemasaran <strong>4P</strong>: Product (produk), Price (harga), Place (tempat), Promotion (promosi)."],
     list:[
       "<strong>Product:</strong> kualitas, desain, varian.",
       "<strong>Price:</strong> harga bersaing sesuai daya beli.",
@@ -491,9 +398,7 @@ const materiData = [
   {
     title:"Proses Produksi, Desain, Kualitas & Kemasan",
     desc:"Mengidentifikasi tahap produksi dan aspek kualitas produk",
-    inti:[
-      "Proses produksi kerajinan diawali dengan <strong>perencanaan/desain</strong>, dilanjutkan pemilihan bahan, pembuatan, finishing, dan pengemasan."
-    ],
+    inti:["Proses produksi kerajinan diawali dengan <strong>perencanaan/desain</strong>, dilanjutkan pemilihan bahan, pembuatan, finishing, dan pengemasan."],
     list:[
       "<strong>Desain produk:</strong> menentukan fungsi, estetika, dan nilai jual.",
       "<strong>Kualitas produk:</strong> jika produk mudah rusak, perbaiki kualitas bahan, teknik sambung, dan finishing.",
@@ -509,9 +414,7 @@ const materiData = [
   {
     title:"Evaluasi Usaha & Sumber Ide",
     desc:"Menjelaskan tujuan evaluasi dan mengidentifikasi sumber ide usaha",
-    inti:[
-      "Evaluasi usaha adalah penilaian kinerja untuk menemukan perbaikan dan pengembangan usaha."
-    ],
+    inti:["Evaluasi usaha adalah penilaian kinerja untuk menemukan perbaikan dan pengembangan usaha."],
     list:[
       "<strong>Tujuan evaluasi:</strong> menilai kinerja, menemukan masalah, dan merumuskan perbaikan.",
       "<strong>Sumber ide usaha:</strong> pengamatan lingkungan, hobi, kebutuhan masyarakat, tren, dan kearifan lokal."
@@ -526,14 +429,12 @@ const materiData = [
   {
     title:"Sistem & Tahapan Perancangan Produk Rekayasa",
     desc:"Memahami pengertian sistem dan tahapan inform–plan–decide–carry out–control–evaluate",
-    inti:[
-      "Kata <strong>sistem</strong> berasal dari bahasa Yunani <em>systema</em>, yaitu kesatuan yang terdiri dari komponen-komponen yang saling berhubungan untuk mencapai tujuan."
-    ],
+    inti:["Kata <strong>sistem</strong> berasal dari bahasa Yunani <em>systema</em>, yaitu kesatuan yang terdiri dari komponen-komponen yang saling berhubungan untuk mencapai tujuan."],
     list:[
       "<strong>Inform:</strong> mengumpulkan data dan kebutuhan.",
       "<strong>Plan:</strong> merencanakan desain, bahan, dan langkah kerja.",
       "<strong>Decide:</strong> memutuskan desain dan bahan terbaik.",
-      "<strong>Carry out:</strong> pelaksanaan pembuatan & perakitan komponen.",
+      "<strong>Carry out:</strong> pelaksanaan pembuatan &amp; perakitan komponen.",
       "<strong>Control:</strong> pengawasan mutu selama proses.",
       "<strong>Evaluate:</strong> menilai hasil apakah sesuai tujuan."
     ],
@@ -547,9 +448,7 @@ const materiData = [
   {
     title:"Produk Rekayasa Sistem Teknik",
     desc:"Contoh produk, prinsip dasar, pemilihan bahan, dan pengujian",
-    inti:[
-      "Produk rekayasa sistem teknik adalah produk yang dibuat dari komponen-komponen yang saling terhubung membentuk fungsi tertentu."
-    ],
+    inti:["Produk rekayasa sistem teknik adalah produk yang dibuat dari komponen-komponen yang saling terhubung membentuk fungsi tertentu."],
     list:[
       "<strong>Contoh:</strong> lampu otomatis, alarm, kipas sederhana, robot mini.",
       "<strong>Prinsip dasar:</strong> komponen saling terhubung membentuk fungsi.",
@@ -566,9 +465,7 @@ const materiData = [
   {
     title:"Bahan Pangan & Makanan Khas Daerah",
     desc:"Mengidentifikasi bahan nabati, hewani, dan makanan khas",
-    inti:[
-      "Bahan pangan dibedakan menjadi <strong>nabati</strong> (tumbuhan) dan <strong>hewani</strong> (hewan)."
-    ],
+    inti:["Bahan pangan dibedakan menjadi <strong>nabati</strong> (tumbuhan) dan <strong>hewani</strong> (hewan)."],
     list:[
       "<strong>Nabati:</strong> sayur, buah, biji-bijian, umbi (bayam, kacang, singkong).",
       "<strong>Hewani:</strong> daging, ikan, telur, susu.",
@@ -585,9 +482,7 @@ const materiData = [
   {
     title:"Teknik Pengolahan Makanan",
     desc:"Membedakan teknik basah dan kering",
-    inti:[
-      "Tiga kelompok teknik pengolahan makanan: <strong>(1) basah</strong>, <strong>(2) kering</strong>, dan <strong>(3) pengawetan</strong>."
-    ],
+    inti:["Tiga kelompok teknik pengolahan makanan: <strong>(1) basah</strong>, <strong>(2) kering</strong>, dan <strong>(3) pengawetan</strong>."],
     list:[
       "<strong>Basah:</strong> merebus, mengukus, mengetim, menyetup.",
       "<strong>Kering:</strong> memanggang, menggoreng, menyangrai, membakar.",
@@ -599,15 +494,13 @@ const materiData = [
       "<strong>Menyangrai/menggongseng:</strong> memasak <strong>tanpa minyak</strong> (contoh: kopi, kacang).",
       "<strong>Memanggang:</strong> memasak di atas api terbuka atau oven."
     ],
-    indikator:"Soal menyajikan teknik memasak, siswa menentukan kelompoknya (C1/C2), atau membedakan merebus & mengukus berdasarkan media penghantar panas (C2).",
+    indikator:"Soal menyajikan teknik memasak, siswa menentukan kelompoknya (C1/C2), atau membedakan merebus &amp; mengukus berdasarkan media penghantar panas (C2).",
     level:"C1–C2"
   },
   {
     title:"Karakteristik Wirausaha & Kegagalan Usaha",
     desc:"Menentukan karakteristik wirausaha sukses dan faktor kegagalan",
-    inti:[
-      "Wirausaha yang berhasil memiliki karakteristik khas yang membedakannya dari yang lain."
-    ],
+    inti:["Wirausaha yang berhasil memiliki karakteristik khas yang membedakannya dari yang lain."],
     list:[
       "<strong>Karakteristik sukses:</strong> disiplin, kreatif, berani ambil risiko, jujur, ulet, inovatif, dan mampu melihat peluang.",
       "<strong>Faktor kegagalan usaha:</strong> kurang perencanaan, modal habis, tidak memahami pasar, manajemen buruk, dan kurang inovasi."
@@ -668,51 +561,6 @@ function toggleMateri(head){
     body.style.maxHeight = body.scrollHeight + 'px';
   }
 }
-
-/* =========================================================
-   FLASHCARD
-   ========================================================= */
-const flashcards = [
-  {q:"Apa tujuan wirausaha kerajinan dari bahan limbah?",a:"Menciptakan nilai tambah limbah, mengurangi pencemaran, membuka lapangan kerja, dan memperoleh keuntungan."},
-  {q:"Sebutkan tujuan pemanfaatan limbah menjadi produk kerajinan!",a:"Mengurangi sampah, menghemat sumber daya, menciptakan produk bernilai jual, mendukung ekonomi sirkular."},
-  {q:"Faktor apa saja yang perlu dipertimbangkan sebelum memilih produk kerajinan?",a:"Ketersediaan bahan, minat pasar, keterampilan, modal, dan daya saing."},
-  {q:"Apa prinsip utama mengembangkan ide usaha kerajinan?",a:"Inovatif, kreatif, berbasis kebutuhan pasar, dan berkelanjutan."},
-  {q:"Apa tujuan analisis kelayakan usaha sebelum produksi?",a:"Memastikan usaha layak dijalankan dari aspek pasar, teknis, finansial, dan SDM."},
-  {q:"Sebutkan indikator kelayakan usaha kerajinan!",a:"Ada permintaan pasar, bahan tersedia, modal cukup, dan keuntungan layak."},
-  {q:"Jenis analisis usaha berdasarkan kebutuhan dan minat calon pembeli?",a:"Analisis pasar (survei/observasi konsumen)."},
-  {q:"Tindakan tepat saat modal usaha terbatas?",a:"Mulai usaha kecil, gunakan bahan lokal, kolaborasi, atau ajukan pinjaman terukur."},
-  {q:"Apa fungsi modal dalam usaha?",a:"Membiayai produksi, operasional, dan pengembangan usaha."},
-  {q:"Rumus menghitung biaya produksi per produk?",a:"Biaya per unit = Total biaya ÷ Jumlah produk."},
-  {q:"Rumus menghitung total pendapatan?",a:"Pendapatan = Jumlah produk × Harga jual."},
-  {q:"Rumus menghitung keuntungan usaha?",a:"Keuntungan = Pendapatan − Biaya produksi."},
-  {q:"Strategi pemasaran yang tepat untuk produk kerajinan?",a:"Menerapkan 4P (Product, Price, Place, Promotion) + pemasaran digital."},
-  {q:"Apa tujuan inovasi produk dalam persaingan usaha?",a:"Mempertahankan daya saing dan menarik konsumen baru."},
-  {q:"Tahap awal dalam proses produksi kerajinan?",a:"Perencanaan/desain produk."},
-  {q:"Apa peranan desain dalam pembuatan produk kerajinan?",a:"Menentukan fungsi, estetika, dan nilai jual produk."},
-  {q:"Aspek produk yang perlu diperbaiki jika ketahanan kurang?",a:"Kualitas bahan, teknik sambung, dan finishing."},
-  {q:"Apa tujuan penggunaan kemasan dalam usaha kerajinan?",a:"Melindungi produk, menarik minat, dan memberi informasi produk."},
-  {q:"Apa tujuan evaluasi dalam pengembangan usaha?",a:"Menilai kinerja usaha dan menemukan perbaikan."},
-  {q:"Sumber ide usaha berdasarkan pengamatan lingkungan?",a:"Mengamati kebutuhan masyarakat, hobi, dan potensi lingkungan sekitar."}
-];
-
-let fcIndex = 0;
-function renderFlashcard(){
-  document.getElementById('fcQuestion').textContent = flashcards[fcIndex].q;
-  document.getElementById('fcAnswer').textContent = flashcards[fcIndex].a;
-  document.getElementById('fcCounter').textContent = `Kartu ${fcIndex+1} / ${flashcards.length}`;
-  document.getElementById('flashcard').classList.remove('flipped');
-}
-function flipCard(){document.getElementById('flashcard').classList.toggle('flipped');}
-function nextCard(){fcIndex=(fcIndex+1)%flashcards.length;renderFlashcard();}
-function prevCard(){fcIndex=(fcIndex-1+flashcards.length)%flashcards.length;renderFlashcard();}
-function shuffleCards(){
-  for(let i=flashcards.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [flashcards[i],flashcards[j]]=[flashcards[j],flashcards[i]];
-  }
-  fcIndex=0;renderFlashcard();
-}
-renderFlashcard();
 
 /* =========================================================
    KUIS 40 SOAL
@@ -806,10 +654,7 @@ function selectOption(idx){
   updateScoreLive();
 }
 
-function goNext(){
-  currentQ++;
-  renderQuiz();
-}
+function goNext(){ currentQ++; renderQuiz(); }
 function updateProgress(){
   document.getElementById('quizProgress').style.width = (currentQ / quizData.length * 100) + '%';
 }

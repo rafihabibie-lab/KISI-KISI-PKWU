@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PKWU - Belajar Interaktif</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #ec4899;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    color: white;
+    padding: 60px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    top: -100px; left: -80px;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    bottom: -60px; right: -50px;
+  }
+  header h1 { font-size: 2.5rem; margin-bottom: 12px; position: relative; z-index: 1; }
+  header p { font-size: 1.1rem; opacity: 0.95; max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    position: relative; z-index: 1;
+    backdrop-filter: blur(10px);
+  }
+
+  /* ===== NAVIGASI TAB ===== */
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 20px;
+    margin-top: -40px;
+    position: relative;
+    z-index: 10;
+    flex-wrap: wrap;
+  }
+  .nav-tab {
+    background: var(--card);
+    border: 2px solid transparent;
+    padding: 14px 28px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-light);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+  }
+  .nav-tab:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+  .nav-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: transparent;
+  }
+
+  /* ===== KONTEN ===== */
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+  .page { display: none; animation: fadeIn 0.4s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .section-desc { color: var(--text-light); margin-bottom: 30px; }
+
+  /* ===== ACCORDION MATERI ===== */
+  .accordion {
+    background: var(--card);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  .accordion:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .accordion-header {
+    padding: 18px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .accordion-header:hover { background: #f1f5f9; }
+  .accordion-header .num {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .accordion-header .level {
+    margin-left: auto;
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .level-c1 { background: #dbeafe; color: #1d4ed8; }
+  .level-c2 { background: #fef3c7; color: #b45309; }
+  .level-c3 { background: #d1fae5; color: #047857; }
+  .level-none { background: #f1f5f9; color: #64748b; }
+
+  .accordion-header .arrow {
+    transition: transform 0.3s;
+    color: var(--text-light);
+    font-size: 0.8rem;
+  }
+  .accordion.open .arrow { transform: rotate(180deg); }
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .accordion.open .accordion-body { max-height: 1000px; }
+  .accordion-content {
+    padding: 0 24px 24px 70px;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .accordion-content ul { margin: 8px 0 8px 20px; }
+  .accordion-content li { margin-bottom: 6px; }
+  .accordion-content .highlight {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin: 12px 0;
+    border-left: 4px solid var(--warning);
+  }
+  .accordion-content .formula {
+    background: #eff6ff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin: 12px 0;
+    border-left: 4px solid var(--primary);
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+  }
+
+  /* ===== KUIS ===== */
+  .quiz-progress {
+    background: var(--card);
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .progress-bar-wrap {
+    flex: 1;
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 50px;
+    overflow: hidden;
+    min-width: 150px;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 50px;
+  }
+  .quiz-stats { display: flex; gap: 16px; font-size: 0.9rem; font-weight: 600; }
+  .quiz-stats .correct { color: var(--success); }
+  .quiz-stats .wrong { color: var(--danger); }
+  .quiz-stats .total { color: var(--text-light); }
+
+  .quiz-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .quiz-card.answered { opacity: 0.95; }
+  .quiz-q-num {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 4px 14px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .quiz-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-option {
+    padding: 14px 18px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    background: white;
+  }
+  .quiz-option:hover:not(.disabled) {
+    border-color: var(--primary);
+    background: #f5f3ff;
+    transform: translateX(4px);
+  }
+  .quiz-option .opt-letter {
+    background: #f1f5f9;
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .quiz-option.correct {
+    border-color: var(--success);
+    background: #ecfdf5;
+  }
+  .quiz-option.correct .opt-letter { background: var(--success); color: white; }
+  .quiz-option.wrong {
+    border-color: var(--danger);
+    background: #fef2f2;
+  }
+  .quiz-option.wrong .opt-letter { background: var(--danger); color: white; }
+  .quiz-option.disabled { cursor: not-allowed; }
+
+  .quiz-explanation {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f0f9ff;
+    border-left: 4px solid var(--primary);
+    font-size: 0.9rem;
+    display: none;
+    animation: fadeIn 0.3s;
+  }
+  .quiz-explanation.show { display: block; }
+  .quiz-explanation strong { color: var(--primary-dark); }
+
+  .quiz-controls { text-align: center; margin: 30px 0; }
+  .btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99,102,241,0.5); }
+  .btn-outline {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    box-shadow: none;
+  }
+  .btn-outline:hover { background: #f5f3ff; }
+
+  .score-result {
+    background: linear-gradient(135deg, #6366f1, #ec4899);
+    color: white;
+    padding: 40px;
+    border-radius: var(--radius);
+    text-align: center;
+    margin-bottom: 24px;
+    display: none;
+    animation: fadeIn 0.5s;
+  }
+  .score-result.show { display: block; }
+  .score-result h2 { font-size: 2.5rem; margin-bottom: 8px; }
+  .score-result p { font-size: 1.1rem; opacity: 0.95; }
+  .score-result .score-big { font-size: 4rem; font-weight: 800; margin: 10px 0; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.8rem; }
+    .nav-tab { padding: 10px 18px; font-size: 0.85rem; }
+    .accordion-content { padding-left: 24px; }
+    .quiz-card { padding: 20px; }
+    .quiz-question { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <span class="header-badge">📚 Sumatif Akhir Semester</span>
+  <h1>PKWU Interaktif</h1>
+  <p>Belajar Prakarya & Kewirausahaan dengan materi lengkap dan 40 soal kuis interaktif</p>
+</header>
+
+<!-- ===== NAVIGASI ===== -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="showPage('bab1', this)">🌿 Bab 1: Kerajinan Limbah</button>
+  <button class="nav-tab" onclick="showPage('bab2', this)">⚙️ Bab 2: Rekayasa Sistem Teknik</button>
+  <button class="nav-tab" onclick="showPage('bab4', this)">🍲 Bab 4: Pengolahan Makanan</button>
+  <button class="nav-tab" onclick="showPage('kuis', this)">📝 Kuis (40 Soal)</button>
+</nav>
+
+<div class="container">
+
+  <!-- ================= BAB 1 ================= -->
+  <div id="bab1" class="page active">
+    <h2 class="section-title">Bab 1 — Wirausaha Kerajinan Limbah</h2>
+    <p class="section-desc">20 indikator soal | C1: 1 | C2: 11 | C3: 8</p>
+    <div id="acc-bab1"></div>
+  </div>
+
+  <!-- ================= BAB 2 ================= -->
+  <div id="bab2" class="page">
+    <h2 class="section-title">Bab 2 — Produk Rekayasa Sistem Teknik</h2>
+    <p class="section-desc">15 indikator soal | C1: 3 | C2: 10 | C3: 2</p>
+    <div id="acc-bab2"></div>
+  </div>
+
+  <!-- ================= BAB 4 ================= -->
+  <div id="bab4" class="page">
+    <h2 class="section-title">Bab 4 — Pengolahan Makanan</h2>
+    <p class="section-desc">14 indikator soal | C1: 5 | C2: 6 | C3: 2 | Tanpa level: 1</p>
+    <div id="acc-bab4"></div>
+  </div>
+
+  <!-- ================= KUIS ================= -->
+  <div id="kuis" class="page">
+    <h2 class="section-title">Kuis Interaktif — 40 Soal Pilihan Ganda</h2>
+    <p class="section-desc">Uji pemahamanmu! Setiap soal memiliki pembahasan.</p>
+
+    <div class="quiz-progress">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="quiz-stats">
+        <span class="correct">✓ <span id="statCorrect">0</span></span>
+        <span class="wrong">✗ <span id="statWrong">0</span></span>
+        <span class="total">/ <span id="statTotal">0</span> dari 40</span>
+      </div>
+    </div>
+
+    <div class="score-result" id="scoreResult">
+      <h2>Hasil Kuis</h2>
+      <div class="score-big" id="scoreBig">0</div>
+      <p id="scoreMsg"></p>
+    </div>
+
+    <div id="quizContainer"></div>
+
+    <div class="quiz-controls">
+      <button class="btn btn-outline" onclick="resetQuiz()">🔄 Ulangi Kuis</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>📚 PKWU Interaktif — Materi & Kuis Sumatif Akhir Semester</p>
+  <p style="margin-top:8px; opacity:0.7;">Dibuat berdasarkan kisi-kisi resmi | Bab 1, 2, dan 4</p>
+</footer>
+
+<script>
+/* ============================================================
+   DATA MATERI PER INDIKATOR
+   ============================================================ */
+
+const materiBab1 = [
+  { no:1, materi:"Wirausaha kerajinan limbah", level:"C2", indikator:"Menjelaskan tujuan dari kegiatan wirausaha kerajinan yang terbuat dari bahan limbah",
+    isi:`<p><strong>Wirausaha kerajinan limbah</strong> adalah kegiatan usaha yang memanfaatkan bahan limbah (organik/anorganik) menjadi produk kerajinan bernilai jual.</p>
+    <p><strong>Tujuan:</strong></p><ul>
+    <li>Mengurangi pencemaran lingkungan</li><li>Menciptakan nilai tambah dari barang tak terpakai</li>
+    <li>Membuka lapangan kerja</li><li>Meningkatkan kreativitas</li><li>Menghasilkan keuntungan ekonomi</li></ul>
+    <div class="highlight">💡 Limbah organik (daun, kulit buah) vs anorganik (plastik, kertas, kaleng, kain perca).</div>` },
+  { no:2, materi:"Tujuan pemanfaatan limbah", level:"C2", indikator:"Mengidentifikasi tujuan pemanfaatan bahan limbah menjadi produk kerajinan",
+    isi:`<ul><li>Mengurangi volume sampah di lingkungan</li><li>Memberi nilai tambah (sampah → produk bernilai)</li>
+    <li>Menghemat biaya bahan baku</li><li>Mendorong kreativitas dan inovasi</li>
+    <li>Mendukung ekonomi sirkular dan kelestarian lingkungan</li></ul>` },
+  { no:3, materi:"Peluang usaha", level:"C3", indikator:"Menentukan faktor yang perlu dipertimbangkan sebelum memilih produk kerajinan",
+    isi:`<p><strong>Faktor pertimbangan:</strong></p><ol>
+    <li>Ketersediaan bahan baku (mudah, murah, berkelanjutan)</li>
+    <li>Kebutuhan & minat pasar</li><li>Keterampilan/SDM</li><li>Modal</li>
+    <li>Persaingan (peluang pasar belum jenuh)</li><li>Nilai jual & keunikan produk</li></ol>` },
+  { no:4, materi:"Ide usaha", level:"C2", indikator:"Menjelaskan prinsip utama dalam mengembangkan ide usaha kerajinan",
+    isi:`<p><strong>Prinsip:</strong> kreatif, inovatif, realistis, sesuai sumber daya, dan berorientasi pasar.</p>
+    <p>Ide berasal dari <strong>pengamatan lingkungan</strong> (masalah/kebutuhan sekitar), meniru lalu memodifikasi, atau menciptakan hal baru.</p>` },
+  { no:5, materi:"Kelayakan usaha — tujuan analisis", level:"C2", indikator:"Menjelaskan tujuan analisis kelayakan usaha sebelum kegiatan produksi",
+    isi:`<ul><li>Memastikan usaha layak dijalankan (pasar, teknis, finansial)</li>
+    <li>Meminimalkan risiko kerugian</li><li>Mengetahui kebutuhan modal dan potensi keuntungan</li>
+    <li>Dasar pengambilan keputusan sebelum produksi</li></ul>` },
+  { no:6, materi:"Kelayakan usaha — indikator", level:"C2", indikator:"Mengidentifikasi indikator kelayakan suatu usaha kerajinan",
+    isi:`<ol><li>Aspek pasar — ada permintaan konsumen</li><li>Aspek teknis — bahan, alat, keterampilan tersedia</li>
+    <li>Aspek finansial — modal cukup, potensi untung (BEP, ROI)</li><li>Aspek manajemen — mampu mengelola</li>
+    <li>Aspek sosial-lingkungan — tidak merugikan</li></ol>` },
+  { no:7, materi:"Analisis pasar", level:"C3", indikator:"Menentukan jenis analisis usaha berdasarkan kebutuhan dan minat calon pembeli",
+    isi:`<p><strong>Analisis pasar</strong> = mengkaji kebutuhan, minat, selera, dan daya beli konsumen.</p>
+    <p>Dilakukan dengan survei, observasi, wawancara, kuesioner. Jenis: analisis permintaan pasar, segmentasi, pesaing.</p>` },
+  { no:8, materi:"Modal usaha — keterbatasan modal", level:"C3", indikator:"Menentukan tindakan yang tepat dalam menjalankan usaha dengan keterbatasan modal",
+    isi:`<ol><li>Memulai usaha kecil-kecilan (skala rumahan)</li><li>Memanfaatkan bahan limbah murah</li>
+    <li>Menggunakan alat sederhana</li><li>Mencari mitra/investor atau pinjaman usaha</li>
+    <li>Menjual bertahap, kembangkan dari keuntungan</li><li>Mengikuti program bantuan UMKM</li></ol>` },
+  { no:9, materi:"Modal usaha — fungsi", level:"C2", indikator:"Menjelaskan fungsi modal dalam kegiatan usaha",
+    isi:`<ul><li>Sumber pembiayaan bahan baku, alat, operasional</li><li>Menjamin kelancaran produksi</li>
+    <li>Memungkinkan pengembangan usaha</li><li>Menutup risiko/kebutuhan mendadak</li></ul>
+    <div class="highlight">Modal tetap (alat) vs modal lancar (bahan/operasional).</div>` },
+  { no:10, materi:"Biaya produksi", level:"C3", indikator:"Menghitung biaya produksi setiap produk berdasarkan jumlah produk dan total biaya",
+    isi:`<div class="formula">Biaya produksi per unit = Total biaya produksi ÷ Jumlah produk</div>
+    <p><strong>Contoh:</strong> Total biaya 50 tas = Rp1.500.000 → Rp1.500.000 ÷ 50 = <strong>Rp30.000/tas</strong></p>
+    <p>Komponen: bahan baku + tenaga kerja + overhead (listrik, kemasan, penyusutan alat).</p>` },
+  { no:11, materi:"Pendapatan usaha", level:"C3", indikator:"Menghitung total pendapatan berdasarkan jumlah produk dan harga jual",
+    isi:`<div class="formula">Total pendapatan = Jumlah produk terjual × Harga jual per unit</div>
+    <p><strong>Contoh:</strong> 50 tas × Rp50.000 = <strong>Rp2.500.000</strong></p>` },
+  { no:12, materi:"Keuntungan usaha", level:"C3", indikator:"Menghitung keuntungan berdasarkan pendapatan dan biaya produksi",
+    isi:`<div class="formula">Keuntungan = Total pendapatan − Total biaya produksi</div>
+    <p><strong>Contoh:</strong> Rp2.500.000 − Rp1.500.000 = <strong>Rp1.000.000</strong></p>
+    <div class="highlight">Hasil negatif → kerugian. Pendapatan = biaya → BEP (Break Even Point).</div>` },
+  { no:13, materi:"Strategi pemasaran", level:"C3", indikator:"Menentukan strategi pemasaran yang tepat",
+    isi:`<p><strong>Bauran pemasaran 4P:</strong></p><ol>
+    <li>Product — kualitas, keunikan, desain</li><li>Price — harga terjangkau</li>
+    <li>Place — lokasi penjualan (pasar, toko, online)</li><li>Promotion — media sosial, pameran, mulut ke mulut</li></ol>
+    <p>Strategi tambahan: diskon, bundling, endorse, marketplace.</p>` },
+  { no:14, materi:"Inovasi produk", level:"C2", indikator:"Menjelaskan tujuan inovasi produk dalam menghadapi persaingan usaha",
+    isi:`<ul><li>Membedakan produk dari pesaing (keunikan)</li><li>Menarik minat konsumen baru</li>
+    <li>Mempertahankan pelanggan lama</li><li>Mengikuti tren dan kebutuhan pasar</li>
+    <li>Meningkatkan daya saing dan nilai jual</li></ul>` },
+  { no:15, materi:"Proses produksi", level:"C1", indikator:"Mengidentifikasi tahap awal dalam proses produksi kerajinan",
+    isi:`<p>Tahap awal = <strong>perencanaan/persiapan</strong> → menentukan ide, desain, menyiapkan bahan & alat.</p>
+    <p>Urutan: ide → desain → persiapan bahan/alat → pembentukan → perakitan → finishing → pengemasan.</p>` },
+  { no:16, materi:"Desain produk", level:"C2", indikator:"Menjelaskan peranan desain dalam proses pembuatan produk kerajinan",
+    isi:`<ul><li>Menentukan bentuk, fungsi, dan estetika produk</li><li>Menjadi panduan proses produksi</li>
+    <li>Meningkatkan daya tarik dan nilai jual</li><li>Mempertimbangkan ergonomis dan keamanan</li></ul>` },
+  { no:17, materi:"Kualitas produk", level:"C3", indikator:"Menentukan aspek produk yang perlu diperbaiki berdasarkan permasalahan ketahanan produk",
+    isi:`<p>Jika produk tidak tahan lama → perbaiki <strong>pemilihan bahan, teknik penyambungan, dan finishing</strong> (pelapisan/pewarnaan).</p>
+    <p>Aspek kualitas: kekuatan, kerapian, keawetan, keamanan, estetika.</p>` },
+  { no:18, materi:"Pengemasan produk", level:"C2", indikator:"Menjelaskan tujuan penggunaan kemasan dalam kegiatan usaha kerajinan",
+    isi:`<ul><li>Melindungi produk dari kerusakan</li><li>Menarik minat pembeli</li>
+    <li>Memberi informasi (label, merek)</li><li>Membedakan produk dari pesaing</li>
+    <li>Mempermudah penyimpanan dan distribusi</li></ul>` },
+  { no:19, materi:"Evaluasi usaha", level:"C2", indikator:"Menjelaskan tujuan evaluasi dalam pengembangan usaha",
+    isi:`<ul><li>Menilai kinerja usaha (tercapai/tidak target)</li><li>Mengetahui kekurangan dan masalah</li>
+    <li>Dasar perbaikan dan pengambilan keputusan</li><li>Mengukur efisiensi biaya dan produksi</li>
+    <li>Merencanakan pengembangan usaha</li></ul>` },
+  { no:20, materi:"Sumber ide usaha", level:"C2", indikator:"Mengidentifikasi sumber ide usaha berdasarkan pengamatan lingkungan sekitar",
+    isi:`<ol><li>Lingkungan sekitar — limbah, kebutuhan warga</li><li>Pengalaman pribadi dan hobi</li>
+    <li>Membaca/melihat tren (media, internet)</li><li>Mengamati pesaing lalu memodifikasi</li>
+    <li>Masalah sehari-hari yang belum terpecahkan</li></ol>` }
+];
+
+const materiBab2 = [
+  { no:21, materi:"Pengertian sistem", level:"C1", indikator:"Mengidentifikasi pengertian sistem berdasarkan asal katanya",
+    isi:`<p>Berasal dari bahasa Yunani <strong>"systema"</strong> = keseluruhan yang tersusun dari bagian-bagian.</p>
+    <p>Sistem = kumpulan komponen yang saling berhubungan untuk mencapai tujuan. Ciri: tujuan, komponen, hubungan.</p>` },
+  { no:22, materi:"Tujuan sistem", level:"C2", indikator:"Menjelaskan tujuan penerapan pemikiran sistematis dalam pemecahan masalah",
+    isi:`<ul><li>Memecahkan masalah secara terurut dan menyeluruh</li><li>Menghindari solusi parsial</li>
+    <li>Memahami hubungan antar komponen masalah</li><li>Mengambil keputusan lebih tepat</li>
+    <li>Meningkatkan efisiensi kerja</li></ul>` },
+  { no:23, materi:"Tahap inform", level:"C1", indikator:"Mengidentifikasi kegiatan yang dilakukan pada tahap inform",
+    isi:`<ul><li>Mengumpulkan informasi dan data</li><li>Identifikasi masalah dan kebutuhan pengguna</li>
+    <li>Mencari referensi produk sejenis</li></ul>
+    <div class="highlight">Belum produksi — masih pengumpulan data.</div>` },
+  { no:24, materi:"Tahap plan", level:"C2", indikator:"Menjelaskan kegiatan yang dilakukan pada tahap plan",
+    isi:`<ul><li>Menyusun rencana produk: desain, bahan, alat, biaya, jadwal</li>
+    <li>Menentukan spesifikasi produk</li><li>Membuat sketsa/gambar kerja</li>
+    <li>Merencanakan anggaran dan langkah kerja</li></ul>` },
+  { no:25, materi:"Tahap decide", level:"C2", indikator:"Menentukan kegiatan yang dilakukan pada tahap decide",
+    isi:`<ul><li>Memilih/menetapkan alternatif terbaik dari rencana</li><li>Menentukan bahan dan desain final</li>
+    <li>Mengambil keputusan sebelum pelaksanaan</li></ul>` },
+  { no:26, materi:"Tahap carry out — perakitan", level:"C3", indikator:"Mengidentifikasi tahap perakitan komponen dalam pembuatan produk rekayasa",
+    isi:`<p>Perakitan = menggabungkan komponen menjadi produk utuh. Dilakukan pada tahap <strong>carry out (pelaksanaan)</strong>.</p>
+    <p>Memperhatikan ketepatan ukuran dan kekuatan sambungan.</p>` },
+  { no:27, materi:"Tahap control", level:"C2", indikator:"Menentukan kegiatan yang dilakukan pada tahap control",
+    isi:`<ul><li>Memantau pelaksanaan agar sesuai rencana</li><li>Membandingkan hasil dengan standar</li>
+    <li>Menemukan penyimpangan dan memperbaiki</li><li>Menjaga kualitas dan ketepatan proses</li></ul>` },
+  { no:28, materi:"Tahap evaluate", level:"C2", indikator:"Menjelaskan tujuan kegiatan evaluasi produk",
+    isi:`<ul><li>Menilai hasil akhir produk</li><li>Mengetahui kekurangan produk</li>
+    <li>Dasar perbaikan produk berikutnya</li><li>Mengukur keberhasilan proses produksi</li></ul>` },
+  { no:29, materi:"Urutan perancangan", level:"C2", indikator:"Menentukan urutan tahapan perencanaan usaha produk rekayasa sistem teknik",
+    isi:`<div class="formula">Inform → Plan → Decide → Carry out → Control → Evaluate</div>` },
+  { no:30, materi:"Produk rekayasa sistem teknik", level:"C1", indikator:"Mengidentifikasi contoh produk rekayasa sistem teknik",
+    isi:`<p>Contoh: alat pengering/oven sederhana, pompa air sederhana, lampu otomatis (sensor), alat pengatur suhu, mesin penggiling sederhana.</p>
+    <p>Ciri: menggunakan prinsip teknik, komponen mekanik/elektrik, sistem kerja terintegrasi.</p>` },
+  { no:31, materi:"Prinsip dasar produk rekayasa", level:"C2", indikator:"Menjelaskan prinsip dasar yang digunakan dalam pembuatan produk rekayasa sistem teknik",
+    isi:`<ul><li>Fungsional — bekerja sesuai fungsi</li><li>Sistematis — komponen terhubung</li>
+    <li>Efisien — hemat energi/bahan</li><li>Aman — tidak membahayakan</li>
+    <li>Ekonomis — biaya terjangkau</li></ul>` },
+  { no:32, materi:"Pemilihan bahan dan komponen", level:"C2", indikator:"Mengidentifikasi aspek yang perlu diperhatikan dalam pemilihan bahan dan komponen produk",
+    isi:`<ol><li>Kekuatan/ketahanan bahan</li><li>Ketersediaan dan harga</li><li>Kesesuaian fungsi</li>
+    <li>Kemudahan pengolahan</li><li>Keamanan</li><li>Kompatibilitas antar komponen</li></ol>` },
+  { no:33, materi:"Pengujian produk", level:"C2", indikator:"Menjelaskan tujuan pengujian produk setelah proses pembuatan",
+    isi:`<ul><li>Memastikan produk berfungsi sesuai rancangan</li><li>Mengetahui kelemahan produk</li>
+    <li>Menjamin keamanan pengguna</li><li>Menilai kualitas dan daya tahan</li>
+    <li>Dasar perbaikan sebelum dipasarkan</li></ul>` },
+  { no:34, materi:"Strategi promosi", level:"C3", indikator:"Menentukan strategi promosi yang tepat untuk produk rekayasa sistem teknik",
+    isi:`<ul><li>Demonstrasi produk (uji coba langsung)</li><li>Media sosial & marketplace</li>
+    <li>Pameran/bazar produk teknologi</li><li>Endorse/ulasan pengguna</li>
+    <li>Diskon/garansi</li><li>Menonjolkan keunggulan teknis</li></ul>` },
+  { no:35, materi:"Rancangan produk", level:"C2", indikator:"Menjelaskan tujuan pembuatan rancangan sebelum proses produksi",
+    isi:`<ul><li>Menjadi panduan proses produksi</li><li>Meminimalkan kesalahan dan pemborosan</li>
+    <li>Memperkirakan kebutuhan bahan, alat, biaya</li><li>Menjamin hasil sesuai fungsi dan desain</li>
+    <li>Mempermudah evaluasi hasil</li></ul>` }
+];
+
+const materiBab4 = [
+  { no:36, materi:"Bahan pangan nabati", level:"C1", indikator:"Mengidentifikasi contoh bahan pangan nabati",
+    isi:`<p>Contoh: sayur (bayam, kangkung, wortel), buah (apel, mangga, pisang), biji-bijian (beras, jagung, kedelai), umbi (kentang, singkong, ubi).</p>
+    <p>Ciri: berasal dari tumbuhan.</p>` },
+  { no:37, materi:"Makanan khas daerah berbahan hewani", level:"C1", indikator:"Mengidentifikasi makanan khas daerah yang berbahan dasar hewani",
+    isi:`<ul><li>Rendang (daging sapi) — Sumatera Barat</li><li>Sate (ayam/kambing) — Madura</li>
+    <li>Coto Makassar (daging sapi) — Sulawesi Selatan</li><li>Bebek Betutu — Bali</li>
+    <li>Ikan Asam Pedas — Riau</li></ul>` },
+  { no:38, materi:"Teknik pengolahan makanan", level:"—", indikator:"Menyebutkan tiga kelompok teknik pengolahan makanan",
+    isi:`<ol><li><strong>Teknik basah</strong> (moist heat) — merebus, mengukus, menumis, menyetup</li>
+    <li><strong>Teknik kering</strong> (dry heat) — memanggang, menggoreng, menggongseng/menyangrai</li>
+    <li><strong>Pengolahan bahan mentah</strong> — fermentasi, pengasinan, pengasapan</li></ol>` },
+  { no:39, materi:"Karakteristik wirausaha", level:"C3", indikator:"Menentukan karakteristik yang menunjukkan keberhasilan seorang wirausaha berdasarkan beberapa pernyataan",
+    isi:`<ol><li>Percaya diri dan mandiri</li><li>Berorientasi pada tugas dan hasil</li>
+    <li>Berani mengambil risiko terukur</li><li>Kreatif dan inovatif</li>
+    <li>Disiplin dan ulet</li><li>Jujur dan bertanggung jawab</li><li>Berorientasi ke masa depan</li></ol>` },
+  { no:40, materi:"Teknik memasak basah", level:"C2", indikator:"Mengelompokkan contoh metode yang termasuk teknik memasak basah",
+    isi:`<p>Teknik basah: merebus (boiling), mengukus (steaming), menumis (sautéing), menyetup (stewing), mengentim (double boiling).</p>
+    <p>Ciri: menggunakan media cair (air/kaldu/santan) sebagai penghantar panas.</p>` },
+  { no:41, materi:"Teknik merebus", level:"C2", indikator:"Menjelaskan cara kerja teknik memasak dengan metode merebus",
+    isi:`<p>Bahan dimasukkan ke dalam air mendidih (100°C). Panas dihantarkan melalui air. Bahan direndam hingga matang merata.</p>
+    <p>Cocok untuk: sayur, daging, telur, pasta. Blansir (sebentar) vs merebus (sampai matang).</p>` },
+  { no:42, materi:"Teknik memasak kering", level:"C1", indikator:"Mengidentifikasi contoh metode yang termasuk teknik memasak kering",
+    isi:`<p>Teknik kering: menggoreng (frying), memanggang (grilling/roasting), menggongseng/menyangrai, membakar (baking).</p>
+    <p>Ciri: tanpa media air, menggunakan minyak atau udara panas langsung.</p>` },
+  { no:43, materi:"Promosi produk makanan", level:"C1", indikator:"Menjelaskan pengertian promosi dalam kegiatan usaha makanan",
+    isi:`<p>Promosi = kegiatan memperkenalkan dan menawarkan produk kepada konsumen. Tujuan: meningkatkan penjualan dan mengenalkan produk.</p>
+    <p>Bentuk: iklan, diskon, media sosial, cicipan gratis, endorse.</p>` },
+  { no:44, materi:"Kegagalan usaha", level:"C2", indikator:"Mengidentifikasi salah satu faktor penyebab kegagalan usaha",
+    isi:`<ol><li>Kurangnya perencanaan dan riset pasar</li><li>Modal tidak cukup/pengelolaan keuangan buruk</li>
+    <li>Kualitas produk rendah</li><li>Tidak mampu bersaing/kurang inovasi</li>
+    <li>Lokasi dan pemasaran kurang tepat</li><li>SDM kurang terampil</li><li>Tidak disiplin dan mudah menyerah</li></ol>` },
+  { no:45, materi:"Strategi pemasaran makanan daerah", level:"C3", indikator:"Menentukan strategi pemasaran yang tepat untuk meningkatkan penjualan makanan khas daerah",
+    isi:`<ul><li>Menonjolkan keunikan/cita rasa khas daerah</li><li>Kemasan menarik dan higienis</li>
+    <li>Promosi digital (media sosial, marketplace, food vlogger)</li><li>Mengikuti festival/bazar kuliner</li>
+    <li>Varian rasa baru</li><li>Jaringan mitra (reseller, kafe, hotel)</li></ul>` },
+  { no:46, materi:"Teknik merebus vs mengukus", level:"C2", indikator:"Membedakan teknik memasak merebus dan mengukus berdasarkan media penghantar panas",
+    isi:`<p><strong>Merebus:</strong> media air/kaldu, bahan terendam, suhu 100°C, kontak langsung.</p>
+    <p><strong>Mengukus:</strong> media uap air, bahan di atas air, suhu ±100°C, tidak kontak langsung.</p>
+    <div class="highlight">Perbedaan utama: media penghantar panas — air mendidih vs uap air.</div>` },
+  { no:47, materi:"Teknik mengukus", level:"C2", indikator:"Mengidentifikasi contoh makanan yang diolah menggunakan teknik mengukus",
+    isi:`<p>Contoh: kue mangkok, bolu kukus, siomay, bakpao, nasi uduk, pepes ikan, tahu/tempe kukus.</p>
+    <p>Ciri: menggunakan uap air dalam dandang/steamer.</p>` },
+  { no:48, materi:"Teknik memanggang", level:"C1", indikator:"Mengidentifikasi teknik memasak bahan makanan di atas api terbuka",
+    isi:`<p>Memanggang (grilling) = memasak di atas api terbuka/arang. Bahan di grill/rak di atas sumber panas.</p>
+    <p>Contoh: sate, ikan bakar, jagung bakar, ayam panggang.</p>` },
+  { no:49, materi:"Teknik menggongseng/menyangrai", level:"C1", indikator:"Mengidentifikasi proses memasak bahan makanan tanpa menggunakan minyak",
+    isi:`<p>Menyangrai/menggongseng = memasak tanpa minyak dengan wajan panas dan diaduk.</p>
+    <p>Contoh: menyangrai kopi, kacang, biji-bijian. Tujuan: mengeringkan, mengeluarkan aroma, mematangkan.</p>` }
+];
+
+/* ============================================================
+   RENDER ACCORDION MATERI
+   ============================================================ */
+
+function renderAccordion(data, containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = data.map(item => {
+    const levelClass = item.level === 'C1' ? 'level-c1' : item.level === 'C2' ? 'level-c2' : item.level === 'C3' ? 'level-c3' : 'level-none';
+    const levelLabel = item.level === '—' ? 'Umum' : item.level;
+    return `
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="num">${item.no}</span>
+          <span>${item.materi}</span>
+          <span class="level ${levelClass}">${levelLabel}</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p style="font-style:italic; color:var(--text-light); margin-bottom:10px; font-size:0.88rem;">📌 ${item.indikator}</p>
+            ${item.isi}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleAccordion(header) {
+  const acc = header.parentElement;
+  acc.classList.toggle('open');
+}
+
+renderAccordion(materiBab1, 'acc-bab1');
+renderAccordion(materiBab2, 'acc-bab2');
+renderAccordion(materiBab4, 'acc-bab4');
+
+/* ============================================================
+   DATA 40 SOAL KUIS
+   ============================================================ */
+
+const quizData = [
+  // ===== BAB 1 (Soal 1-20) =====
+  { q:"Tujuan utama kegiatan wirausaha kerajinan dari bahan limbah adalah…",
+    opts:["Membuang limbah ke tempat pembuangan akhir","Mengurangi pencemaran sekaligus menciptakan nilai ekonomi dari barang tak terpakai","Meningkatkan harga bahan baku industri","Mengurangi jumlah tenaga kerja"],
+    ans:1, exp:"Wirausaha kerajinan limbah bertujuan mengurangi pencemaran lingkungan dan menciptakan nilai tambah ekonomi dari barang tak terpakai." },
+  { q:"Salah satu tujuan pemanfaatan bahan limbah menjadi produk kerajinan adalah…",
+    opts:["Memperbanyak sampah di lingkungan","Mengurangi jumlah limbah sekaligus menambah nilai guna barang","Menaikkan biaya produksi","Mengurangi kreativitas pengrajin"],
+    ans:1, exp:"Pemanfaatan limbah mengurangi volume sampah dan memberi nilai tambah (sampah menjadi produk bernilai jual)." },
+  { q:"Sebelum memilih produk kerajinan, faktor yang PALING perlu dipertimbangkan adalah…",
+    opts:["Warna cat yang tersedia di toko","Ketersediaan bahan baku dan minat pasar","Jumlah pesaing yang tidak diketahui","Harga alat paling mahal"],
+    ans:1, exp:"Faktor utama: ketersediaan bahan baku (mudah, murah, berkelanjutan) dan kebutuhan/minat pasar." },
+  { q:"Prinsip utama dalam mengembangkan ide usaha kerajinan adalah…",
+    opts:["Meniru produk pesaing tanpa modifikasi","Memanfaatkan peluang dari lingkungan dan kebutuhan pasar secara kreatif dan inovatif","Menunggu bantuan pemerintah","Menggunakan bahan paling mahal"],
+    ans:1, exp:"Ide usaha dikembangkan secara kreatif dan inovatif dengan memanfaatkan peluang dari lingkungan dan kebutuhan pasar." },
+  { q:"Tujuan analisis kelayakan usaha sebelum kegiatan produksi adalah…",
+    opts:["Menghabiskan modal secepat mungkin","Memastikan usaha layak dijalankan dan meminimalkan risiko kerugian","Menambah jumlah karyawan","Memperbanyak produk tanpa perhitungan"],
+    ans:1, exp:"Analisis kelayakan memastikan usaha layak (pasar, teknis, finansial) dan meminimalkan risiko kerugian." },
+  { q:"Berikut yang termasuk indikator kelayakan usaha kerajinan adalah…",
+    opts:["Tersedianya permintaan pasar, bahan baku, dan potensi keuntungan","Banyaknya hutang dan sedikit pelanggan","Produk yang tidak diminati pasar","Modal yang tidak mencukupi"],
+    ans:0, exp:"Indikator kelayakan: aspek pasar (permintaan), teknis (bahan/alat), finansial (modal & potensi untung), manajemen, dan sosial-lingkungan." },
+  { q:"Untuk mengetahui produk kerajinan yang diminati calon pembeli, analisis yang tepat adalah…",
+    opts:["Analisis pasar (survei kebutuhan dan minat konsumen)","Analisis laboratorium","Analisis cuaca","Analisis harga saham"],
+    ans:0, exp:"Analisis pasar mengkaji kebutuhan, minat, selera, dan daya beli konsumen melalui survei, observasi, atau kuesioner." },
+  { q:"Tindakan paling tepat saat menjalankan usaha dengan modal terbatas adalah…",
+    opts:["Meminjam uang sebanyak mungkin tanpa perhitungan","Memulai usaha skala kecil dengan bahan murah dan alat sederhana, lalu berkembang bertahap","Membeli semua peralatan mahal","Menunggu modal besar datang"],
+    ans:1, exp:"Dengan modal terbatas: mulai skala kecil, manfaatkan bahan limbah murah, alat sederhana, lalu kembangkan dari keuntungan." },
+  { q:"Fungsi modal dalam kegiatan usaha kerajinan adalah…",
+    opts:["Membiayai kebutuhan produksi dan operasional agar usaha berjalan lancar","Menggantikan keterampilan pengrajin","Menghilangkan kebutuhan promosi","Membuat produk otomatis laku"],
+    ans:0, exp:"Modal berfungsi membiayai bahan baku, alat, dan operasional agar produksi lancar serta usaha dapat berkembang." },
+  { q:"Total biaya produksi 50 tas kain perca adalah Rp1.500.000. Biaya produksi per tas adalah…",
+    opts:["Rp20.000","Rp25.000","Rp30.000","Rp35.000"],
+    ans:2, exp:"Biaya per unit = Total biaya ÷ Jumlah produk = Rp1.500.000 ÷ 50 = Rp30.000 per tas." },
+  { q:"50 tas terjual dengan harga Rp50.000/tas. Total pendapatan adalah…",
+    opts:["Rp1.500.000","Rp2.000.000","Rp2.500.000","Rp3.000.000"],
+    ans:2, exp:"Total pendapatan = Jumlah produk × Harga jual = 50 × Rp50.000 = Rp2.500.000." },
+  { q:"Pendapatan Rp2.500.000 dan biaya produksi Rp1.500.000. Keuntungan usaha adalah…",
+    opts:["Rp500.000","Rp1.000.000","Rp1.500.000","Rp4.000.000"],
+    ans:1, exp:"Keuntungan = Pendapatan − Biaya = Rp2.500.000 − Rp1.500.000 = Rp1.000.000." },
+  { q:"Strategi pemasaran paling tepat untuk produk kerajinan limbah agar dikenal luas adalah…",
+    opts:["Menyembunyikan produk dari publik","Mempromosikan melalui media sosial dan mengikuti pameran produk","Menjual hanya kepada keluarga","Menaikkan harga setinggi mungkin"],
+    ans:1, exp:"Promosi media sosial dan pameran memperluas jangkauan pasar dan mengenalkan produk kepada konsumen." },
+  { q:"Tujuan inovasi produk dalam menghadapi persaingan usaha adalah…",
+    opts:["Membuat produk sama dengan pesaing","Menciptakan keunikan produk agar unggul dan diminati konsumen","Menurunkan kualitas produk","Menghindari kebutuhan pasar"],
+    ans:1, exp:"Inovasi menciptakan keunikan produk sehingga unggul dalam persaingan, menarik konsumen baru, dan mempertahankan pelanggan." },
+  { q:"Tahap awal dalam proses produksi kerajinan adalah…",
+    opts:["Pengemasan produk","Merencanakan produk dan menyiapkan bahan serta alat","Menjual produk","Mengevaluasi hasil"],
+    ans:1, exp:"Tahap awal produksi adalah perencanaan/persiapan: menentukan ide, desain, serta menyiapkan bahan dan alat." },
+  { q:"Peranan desain dalam pembuatan produk kerajinan adalah…",
+    opts:["Menjadi panduan bentuk dan fungsi produk agar menarik dan sesuai kebutuhan","Menambah biaya tanpa manfaat","Membuat produk sulit dibuat","Menghilangkan ciri khas produk"],
+    ans:0, exp:"Desain menentukan bentuk, fungsi, dan estetika produk serta menjadi panduan proses produksi agar hasil sesuai." },
+  { q:"Produk kerajinan cepat rusak. Aspek yang perlu diperbaiki adalah…",
+    opts:["Warna kemasan saja","Kualitas bahan dan teknik penyambungan/finishing agar lebih awet","Jumlah karyawan","Nama produk"],
+    ans:1, exp:"Ketahanan produk dipengaruhi pemilihan bahan, teknik penyambungan, dan finishing (pelapisan/pewarnaan)." },
+  { q:"Tujuan penggunaan kemasan dalam usaha kerajinan adalah…",
+    opts:["Menambah berat produk","Melindungi produk dan meningkatkan daya tarik agar diminati pembeli","Menyulitkan pengiriman","Menghilangkan informasi produk"],
+    ans:1, exp:"Kemasan melindungi produk dari kerusakan, menarik minat pembeli, memberi informasi, dan membedakan dari pesaing." },
+  { q:"Tujuan evaluasi dalam pengembangan usaha adalah…",
+    opts:["Menilai kinerja dan menemukan perbaikan untuk mengembangkan usaha","Menambah masalah baru","Menghentikan usaha","Menghindari pengambilan keputusan"],
+    ans:0, exp:"Evaluasi menilai kinerja, mengetahui kekurangan, dan menjadi dasar perbaikan serta pengembangan usaha." },
+  { q:"Sumber ide usaha berdasarkan pengamatan lingkungan sekitar contohnya…",
+    opts:["Membeli produk jadi dari luar negeri","Memanfaatkan limbah kain perca di lingkungan menjadi tas/dompet","Meniru produk tanpa modifikasi","Menunggu ide dari orang lain"],
+    ans:1, exp:"Lingkungan sekitar (limbah, kebutuhan warga) merupakan sumber ide usaha yang dapat dimanfaatkan secara kreatif." },
+
+  // ===== BAB 2 (Soal 21-35) =====
+  { q:"Kata \"sistem\" berasal dari bahasa Yunani \"systema\" yang berarti…",
+    opts:["Bagian yang terpisah","Keseluruhan yang tersusun dari bagian-bagian yang saling berhubungan","Alat elektronik","Proses acak"],
+    ans:1, exp:"Systema berarti keseluruhan yang tersusun dari bagian-bagian yang saling berhubungan untuk mencapai tujuan." },
+  { q:"Tujuan penerapan pemikiran sistematis dalam pemecahan masalah adalah…",
+    opts:["Menyelesaikan masalah secara terurut dan menyeluruh dengan memahami hubungan antar komponennya","Menyelesaikan masalah secara acak","Mengabaikan komponen masalah","Menambah masalah baru"],
+    ans:0, exp:"Pemikiran sistematis memecahkan masalah secara terurut, menyeluruh, dan memahami hubungan antar komponen." },
+  { q:"Kegiatan yang dilakukan pada tahap inform adalah…",
+    opts:["Merakit komponen","Mengumpulkan informasi dan data tentang kebutuhan serta bahan yang akan digunakan","Menjual produk","Mengevaluasi hasil"],
+    ans:1, exp:"Tahap inform: mengumpulkan informasi/data, identifikasi masalah, dan mencari referensi — belum melakukan produksi." },
+  { q:"Kegiatan yang dilakukan pada tahap plan adalah…",
+    opts:["Menyusun rencana desain, bahan, alat, biaya, dan jadwal pembuatan produk","Membuang produk gagal","Menjual produk","Memantau hasil"],
+    ans:0, exp:"Tahap plan: menyusun rencana produk (desain, bahan, alat, biaya, jadwal) dan membuat sketsa/gambar kerja." },
+  { q:"Kegiatan yang dilakukan pada tahap decide adalah…",
+    opts:["Mengumpulkan data","Menetapkan pilihan desain dan bahan terbaik untuk dilaksanakan","Merakit produk","Mengevaluasi produk"],
+    ans:1, exp:"Tahap decide: memilih/menetapkan alternatif terbaik (desain & bahan final) sebelum pelaksanaan." },
+  { q:"Tahap perakitan komponen dalam pembuatan produk rekayasa termasuk tahap…",
+    opts:["Inform","Plan","Carry out (pelaksanaan)","Evaluate"],
+    ans:2, exp:"Perakitan komponen menggabungkan bagian menjadi produk utuh, dilakukan pada tahap carry out (pelaksanaan)." },
+  { q:"Kegiatan yang dilakukan pada tahap control adalah…",
+    opts:["Memantau dan membandingkan hasil pelaksanaan dengan rencana agar sesuai standar","Mengumpulkan ide","Menjual produk","Membuang produk"],
+    ans:0, exp:"Tahap control: memantau pelaksanaan, membandingkan dengan rencana, menemukan penyimpangan, dan memperbaiki." },
+  { q:"Tujuan kegiatan evaluasi produk adalah…",
+    opts:["Menilai hasil akhir dan menemukan kekurangan untuk perbaikan produk selanjutnya","Menambah biaya produksi","Menghentikan produksi","Menghindari perbaikan"],
+    ans:0, exp:"Evaluasi menilai hasil akhir, mengetahui kekurangan, dan menjadi dasar perbaikan produk berikutnya." },
+  { q:"Urutan tahapan perencanaan produk rekayasa sistem teknik yang benar adalah…",
+    opts:["Plan – Inform – Decide – Carry out – Control – Evaluate","Inform – Plan – Decide – Carry out – Control – Evaluate","Decide – Inform – Plan – Control – Carry out – Evaluate","Inform – Decide – Plan – Evaluate – Control – Carry out"],
+    ans:1, exp:"Urutan: Inform → Plan → Decide → Carry out → Control → Evaluate." },
+  { q:"Berikut yang termasuk contoh produk rekayasa sistem teknik adalah…",
+    opts:["Lampu otomatis dengan sensor gerak","Kue bolu kukus","Tas dari kain perca","Rendang daging sapi"],
+    ans:0, exp:"Produk rekayasa sistem teknik menggunakan prinsip teknik dan komponen mekanik/elektrik, seperti lampu otomatis sensor gerak." },
+  { q:"Prinsip dasar yang digunakan dalam pembuatan produk rekayasa sistem teknik adalah…",
+    opts:["Fungsional, sistematis, efisien, aman, dan ekonomis","Mahal, rumit, dan berbahaya","Acak dan tidak terencana","Borong dan buang"],
+    ans:0, exp:"Prinsip dasar: fungsional, sistematis, efisien, aman, dan ekonomis, memanfaatkan prinsip mekanika/kelistrikan/energi." },
+  { q:"Aspek yang perlu diperhatikan dalam pemilihan bahan produk adalah…",
+    opts:["Kekuatan, kesesuaian fungsi, ketersediaan, harga, dan keamanan bahan","Warna kemasan saja","Nama merek","Jumlah iklan"],
+    ans:0, exp:"Pemilihan bahan mempertimbangkan kekuatan/ketahanan, ketersediaan & harga, kesesuaian fungsi, kemudahan olah, keamanan, dan kompatibilitas." },
+  { q:"Tujuan pengujian produk setelah proses pembuatan adalah…",
+    opts:["Memastikan produk berfungsi sesuai rancangan dan aman digunakan","Menambah biaya tanpa manfaat","Menghambat pemasaran","Membuat produk cepat rusak"],
+    ans:0, exp:"Pengujian memastikan produk berfungsi sesuai rancangan, mengetahui kelemahan, menjamin keamanan, dan menilai kualitas." },
+  { q:"Strategi promosi paling tepat untuk produk rekayasa sistem teknik adalah…",
+    opts:["Mendemonstrasikan cara kerja produk dan mempromosikannya melalui media sosial","Menyembunyikan produk","Menjual tanpa informasi","Menaikkan harga tanpa alasan"],
+    ans:0, exp:"Demonstrasi produk dan promosi media sosial menonjolkan keunggulan teknis (efisien, praktis) sehingga menarik konsumen." },
+  { q:"Tujuan pembuatan rancangan sebelum proses produksi adalah…",
+    opts:["Menjadi panduan agar produksi terarah, hemat, dan hasil sesuai desain","Menambah kesalahan produksi","Membuang waktu","Mengurangi kualitas"],
+    ans:0, exp:"Rancangan menjadi panduan produksi, meminimalkan kesalahan/pemborosan, memperkirakan kebutuhan, dan mempermudah evaluasi." },
+
+  // ===== BAB 4 (Soal 36-40) =====
+  { q:"Berikut yang termasuk bahan pangan nabati adalah…",
+    opts:["Bayam, wortel, dan kentang","Daging sapi dan ayam","Ikan dan udang","Telur dan susu"],
+    ans:0, exp:"Bahan pangan nabati berasal dari tumbuhan, seperti sayur (bayam, wortel) dan umbi (kentang)." },
+  { q:"Makanan khas daerah yang berbahan dasar hewani adalah…",
+    opts:["Rendang dari Sumatera Barat (daging sapi)","Gado-gado","Pecel sayur","Rujak buah"],
+    ans:0, exp:"Rendang berbahan daging sapi (hewani). Contoh lain: sate, coto Makassar, bebek betutu." },
+  { q:"Tiga kelompok teknik pengolahan makanan adalah…",
+    opts:["Teknik basah, teknik kering, dan pengolahan bahan mentah (fermentasi/pengawetan)","Teknik goreng, teknik bakar, teknik rebus","Teknik potong, teknik aduk, teknik sajikan","Teknik panas, teknik dingin, teknik beku"],
+    ans:0, exp:"Tiga kelompok: teknik basah (moist heat), teknik kering (dry heat), dan pengolahan bahan mentah (fermentasi, pengasinan, pengasapan)." },
+  { q:"Pernyataan yang menunjukkan keberhasilan seorang wirausaha adalah…",
+    opts:["Berani mengambil risiko terukur, kreatif, dan ulet dalam menghadapi kegagalan","Mudah menyerah saat gagal","Tidak disiplin dalam bekerja","Menghindari inovasi"],
+    ans:0, exp:"Karakteristik wirausaha berhasil: percaya diri, berani risiko terukur, kreatif, inovatif, disiplin, ulet, jujur, dan berorientasi masa depan." },
+  { q:"Berikut yang termasuk teknik memasak basah adalah…",
+    opts:["Merebus, mengukus, dan menumis","Menggoreng, memanggang, dan menyangrai","Membakar dan menggongseng","Menjemur dan mengasap"],
+    ans:0, exp:"Teknik basah menggunakan media cair (air/kaldu/santan): merebus, mengukus, menumis, menyetup, mengentim." },
+  { q:"Cara kerja teknik merebus adalah…",
+    opts:["Memasukkan bahan ke dalam air mendidih hingga matang merata","Memasak bahan di atas api terbuka","Memasak bahan tanpa minyak","Memasak dengan uap air"],
+    ans:0, exp:"Merebus: bahan dimasukkan ke air mendidih (100°C), panas dihantarkan air, bahan direndam hingga matang merata." },
+  { q:"Berikut yang termasuk teknik memasak kering adalah…",
+    opts:["Menggoreng, memanggang, dan menyangrai","Merebus dan mengukus","Menumis dan menyetup","Mengentim dan merebus"],
+    ans:0, exp:"Teknik kering tanpa media air: menggoreng, memanggang, menggongseng/menyangrai, membakar." },
+  { q:"Pengertian promosi dalam kegiatan usaha makanan adalah…",
+    opts:["Kegiatan memperkenalkan dan menawarkan produk makanan kepada konsumen untuk meningkatkan penjualan","Kegiatan mengurangi jumlah produk","Kegiatan menaikkan harga","Kegiatan menutup usaha"],
+    ans:0, exp:"Promosi adalah kegiatan memperkenalkan dan menawarkan produk kepada konsumen dengan tujuan meningkatkan penjualan." },
+  { q:"Salah satu faktor penyebab kegagalan usaha adalah…",
+    opts:["Kurangnya perencanaan dan riset pasar sebelum memulai usaha","Banyaknya pelanggan","Kualitas produk tinggi","Inovasi berkelanjutan"],
+    ans:0, exp:"Kegagalan usaha dapat disebabkan kurang perencanaan/riset pasar, modal tidak cukup, kualitas rendah, kurang inovasi, dan SDM kurang terampil." },
+  { q:"Strategi pemasaran paling tepat untuk meningkatkan penjualan makanan khas daerah adalah…",
+    opts:["Mempromosikan keunikan cita rasa khas melalui media sosial dan festival kuliner","Menghilangkan ciri khas daerah","Menjual tanpa kemasan","Menurunkan kualitas bahan"],
+    ans:0, exp:"Strategi: menonjolkan keunikan cita rasa khas, kemasan menarik, promosi digital, festival kuliner, varian rasa baru, dan jaringan mitra." },
+  { q:"Perbedaan utama merebus dan mengukus terletak pada…",
+    opts:["Media penghantar panasnya: air mendidih (merebus) vs uap air (mengukus)","Jumlah garam yang digunakan","Warna bahan makanan","Harga bahan"],
+    ans:0, exp:"Merebus menggunakan air mendidih (bahan terendam), mengukus menggunakan uap air (bahan tidak kontak langsung dengan air)." },
+  { q:"Contoh makanan yang diolah menggunakan teknik mengukus adalah…",
+    opts:["Bolu kukus, bakpao, dan siomay","Sate dan ikan bakar","Ayam goreng","Kacang sangrai"],
+    ans:0, exp:"Mengukus menggunakan uap air: bolu kukus, bakpao, siomay, kue mangkok, pepes ikan, nasi uduk." },
+  { q:"Teknik memasak bahan makanan di atas api terbuka disebut…",
+    opts:["Memanggang (grilling)","Merebus","Mengukus","Menyangrai"],
+    ans:0, exp:"Memanggang (grilling) memasak bahan di atas api terbuka/arang, contoh: sate, ikan bakar, jagung bakar." },
+  { q:"Proses memasak bahan makanan tanpa menggunakan minyak disebut…",
+    opts:["Menyangrai/menggongseng","Menggoreng","Menumis","Merebus"],
+    ans:0, exp:"Menyangrai/menggongseng memasak tanpa minyak dengan wajan panas dan diaduk, contoh: menyangrai kopi, kacang, biji-bijian." }
+];
+
+// Pastikan jumlah soal = 40
+console.log("Total soal kuis:", quizData.length);
+
+/* ============================================================
+   LOGIKA KUIS
+   ============================================================ */
+
+let answered = new Array(quizData.length).fill(false);
+let correctCount = 0;
+let wrongCount = 0;
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = quizData.map((item, i) => `
+    <div class="quiz-card" id="qcard-${i}">
+      <span class="quiz-q-num">Soal ${i+1}</span>
+      <div class="quiz-question">${item.q}</div>
+      <div class="quiz-options" id="opts-${i}">
+        ${item.opts.map((opt, j) => `
+          <div class="quiz-option" id="opt-${i}-${j}" onclick="answerQuestion(${i}, ${j})">
+            <span class="opt-letter">${String.fromCharCode(65+j)}</span>
+            <span>${opt}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="quiz-explanation" id="exp-${i}">
+        <strong>Pembahasan:</strong> ${item.exp}
+      </div>
+    </div>
+  `).join('');
+  updateStats();
+}
+
+function answerQuestion(qIndex, optIndex) {
+  if (answered[qIndex]) return;
+  answered[qIndex] = true;
+
+  const item = quizData[qIndex];
+  const isCorrect = optIndex === item.ans;
+
+  // Tandai semua opsi disabled
+  item.opts.forEach((_, j) => {
+    const el = document.getElementById(`opt-${qIndex}-${j}`);
+    el.classList.add('disabled');
+    if (j === item.ans) el.classList.add('correct');
+    if (j === optIndex && !isCorrect) el.classList.add('wrong');
+  });
+
+  // Tampilkan pembahasan
+  document.getElementById(`exp-${qIndex}`).classList.add('show');
+
+  // Update statistik
+  if (isCorrect) correctCount++; else wrongCount++;
+  updateStats();
+}
+
+function updateStats() {
+  const totalAnswered = correctCount + wrongCount;
+  document.getElementById('statCorrect').textContent = correctCount;
+  document.getElementById('statWrong').textContent = wrongCount;
+  document.getElementById('statTotal').textContent = totalAnswered;
+
+  const pct = (totalAnswered / quizData.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  // Tampilkan hasil jika sudah 40 soal
+  if (totalAnswered === quizData.length) {
+    showResult();
+  }
+}
+
+function showResult() {
+  const result = document.getElementById('scoreResult');
+  const score = Math.round((correctCount / quizData.length) * 100);
+  document.getElementById('scoreBig').textContent = score;
+  let msg = '';
+  if (score >= 90) msg = '🌟 Luar biasa! Kamu sangat menguasai materi!';
+  else if (score >= 75) msg = '👍 Bagus! Tingkatkan lagi sedikit lagi!';
+  else if (score >= 60) msg = '📚 Cukup baik. Pelajari kembali materi yang belum dikuasai.';
+  else msg = '💪 Semangat! Baca ulang materi dan coba lagi.';
+  document.getElementById('scoreMsg').textContent = `${correctCount} benar, ${wrongCount} salah. ${msg}`;
+  result.classList.add('show');
+  result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function resetQuiz() {
+  answered.fill(false);
+  correctCount = 0;
+  wrongCount = 0;
+  document.getElementById('scoreResult').classList.remove('show');
+  renderQuiz();
+  document.getElementById('quizContainer').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ============================================================
+   NAVIGASI
+   ============================================================ */
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ============================================================
+   INISIALISASI
+   ============================================================ */
+
+renderQuiz();
+</script>
+</body>
+</html>
